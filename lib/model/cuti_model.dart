@@ -32,20 +32,22 @@ class CutiModel {
   //List<DetailReimburse> detailReimburse;
 
   factory CutiModel.fromJson(Map<String, dynamic> json) => CutiModel(
-        idCuti: json["id_cuti"] == null ? null : json["id_cuti"],
-        idPegawai: json["id_pegawai"] == null ? null : json["id_pegawai"],
-        namaLengkap: json["nama_lengkap"] == null ? null : json["nama_lengkap"],
+        idCuti: json["id_cuti"] == null ? null : json["id_cuti"].toString(),
+        idPegawai:
+            json["id_pegawai"] == null ? null : json["id_pegawai"].toString(),
+        namaLengkap: json["nama_lengkap"] == null ? null : json["nama_lengkap"].toString(),
         tglMulai: json["tanggal_mulai"] == null
             ? null
             : DateTime.parse(json["tanggal_mulai"]),
         tglAkhir: json["tanggal_akhir"] == null
             ? null
             : DateTime.parse(json["tanggal_akhir"]),
-        hariCuti: json["hari_cuti"] == null ? null : json["hari_cuti"],
-        alasanCuti: json["alasan_cuti"] == null ? null : json["alasan_cuti"],
-        cutiKhusus: json["cuti_khusus"] == null ? null : json["cuti_khusus"],
-        sisaCuti: json["sisa_cuti"] == null ? null : json["sisa_cuti"],
-        statusCuti: json["status_cuti"] == null ? null : json["status_cuti"],
+        hariCuti:
+            json["hari_cuti"] == null ? null : json["hari_cuti"].toString(),
+        alasanCuti: json["alasan_cuti"] == null ? null : json["alasan_cuti"].toString(),
+        cutiKhusus: json["cuti_khusus"] == null ? null : json["cuti_khusus"].toString(),
+        sisaCuti: json["sisa_cuti"] == null ? null : (json["sisa_cuti"] is String ? int.tryParse(json["sisa_cuti"]) : json["sisa_cuti"]),
+        statusCuti: json["status_cuti"] == null ? null : json["status_cuti"].toString(),
       );
 
   Map<String, dynamic> toJson() => {

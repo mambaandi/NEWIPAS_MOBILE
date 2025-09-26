@@ -42,23 +42,25 @@ class _ListReimbState extends State<ListReimb> {
   }
 
   loadData() {
-    fetchReimburse(userid).then((value) {
-      if (value.isNotEmpty) {
-        setState(() {
-          listRemburse = Future.value(value);
-        });
-      }
-    });
+    if (userid != null && userid.isNotEmpty) {
+      fetchReimburse(userid).then((value) {
+        if (value != null && value.isNotEmpty) {
+          setState(() {
+            listRemburse = Future.value(value);
+          });
+        }
+      });
+    }
   }
 
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
-      name = preferences.getString("name");
-      userid = preferences.getString("id");
-      branchID = preferences.getString("branch_id");
-      ambilStatus = preferences.getInt('status');
-      idPegawai = preferences.getString("id_pegawai");
+      name = preferences.getString("name") ?? "";
+      userid = preferences.getString("id") ?? "";
+      branchID = preferences.getString("branch_id") ?? "";
+      ambilStatus = preferences.getInt('status') ?? 0;
+      idPegawai = preferences.getString("id_pegawai") ?? "";
       print("ID Pegawai=$idPegawai");
       print("name=$name");
       loadData();

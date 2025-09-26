@@ -79,15 +79,21 @@ class ReimburseModel {
   List<DetailReimburse> detailReimburse;
 
   factory ReimburseModel.fromJson(Map<String, dynamic> json) => ReimburseModel(
-        idReimburse: json["id_reimburse"] == null ? null : json["id_reimburse"],
-        nomorReimburse:
-            json["nomor_reimburse"] == null ? null : json["nomor_reimburse"],
-        totalReimburse:
-            json["total_reimburse"] == null ? null : json["total_reimburse"],
-        statusReimburse:
-            json["status_reimburse"] == null ? null : json["status_reimburse"],
-        keteranganTolak:
-            json["keterangan_tolak"] == null ? null : json["keterangan_tolak"],
+        idReimburse: json["id_reimburse"] == null
+            ? null
+            : json["id_reimburse"].toString(),
+        nomorReimburse: json["nomor_reimburse"] == null
+            ? null
+            : json["nomor_reimburse"].toString(),
+        totalReimburse: json["total_reimburse"] == null
+            ? null
+            : json["total_reimburse"].toString(),
+        statusReimburse: json["status_reimburse"] == null
+            ? null
+            : json["status_reimburse"].toString(),
+        keteranganTolak: json["keterangan_tolak"] == null
+            ? null
+            : json["keterangan_tolak"].toString(),
         dibuatTanggal: json["dibuat_tanggal"] == null
             ? null
             : DateTime.parse(json["dibuat_tanggal"]),
@@ -129,12 +135,17 @@ class DetailReimburse {
       DetailReimburse(
           idDetailReimburse: json["id_detail_reimburse"] == null
               ? null
-              : json["id_detail_reimburse"],
-          nomorReimb: json["nomor_reimb"] == null ? null : json["nomor_reimb"],
-          itemReimburse:
-              json["item_reimburse"] == null ? null : json["item_reimburse"],
-          biaya: json["biaya"] == null ? null : json["biaya"],
-          image_bon: json["image_bon"] == null ? null : json["image_bon"]);
+              : json["id_detail_reimburse"].toString(),
+          nomorReimb: json["nomor_reimb"] == null
+              ? null
+              : json["nomor_reimb"].toString(),
+          itemReimburse: json["item_reimburse"] == null
+              ? null
+              : json["item_reimburse"].toString(),
+          biaya: json["biaya"] == null ? null : json["biaya"].toString(),
+          image_bon: json["image_bon"] == null
+              ? null
+              : json["image_bon"].toString());
 
   Map<String, dynamic> toJson() => {
         "id_detail_reimburse":

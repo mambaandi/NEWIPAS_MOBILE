@@ -850,123 +850,123 @@ class _HomePageState extends State<HomePage> {
   // }
 
   Future createCheckIn() async {
-  // ✅ Validasi data kosong
-  if (selfie == null ||
-      !(await selfie.exists()) ||
-      alamat.trim().isEmpty ||
-      id.trim().isEmpty ||
-      longlat.trim().isEmpty) {
-    print("Data tidak lengkap untuk Check In.");
-    
-    // ✅ Tampilkan dialog error
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: Text("Gagal Check In"),
-        content: Text("Data belum lengkap. Pastikan foto dan lokasi terisi."),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text("OK"),
-          )
-        ],
-      ),
+    // ✅ Validasi data kosong
+    if (selfie == null ||
+        !(await selfie.exists()) ||
+        alamat.trim().isEmpty ||
+        id.trim().isEmpty ||
+        longlat.trim().isEmpty) {
+      print("Data tidak lengkap untuk Check In.");
+
+      // ✅ Tampilkan dialog error
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text("Gagal Check In"),
+          content: Text("Data belum lengkap. Pastikan foto dan lokasi terisi."),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("OK"),
+            )
+          ],
+        ),
+      );
+      return;
+    }
+
+    // ✅ Kirim data kalau semua valid
+    var stream = http.ByteStream(DelegatingStream.typed(selfie.openRead()));
+    var length = await selfie.length();
+    var multipartFile = http.MultipartFile(
+      "image_checkin",
+      stream,
+      length,
+      filename: path.basename(selfie.path),
     );
-    return;
+
+    var req = http.MultipartRequest('POST', Uri.parse(util.Api.urlCheckIn))
+      ..headers['Content-Type'] = 'multipart/form-data'
+      ..fields['id_user'] = '$id'
+      ..fields['alamat_checkin'] = '$alamat'
+      ..fields['longlat_checkin'] = '$longlat'
+      ..files.add(multipartFile);
+
+    await req.send();
+
+    // ✅ Reset variabel
+    _image = null;
+    alamat = "";
+    id = "";
+    longlat = "";
+
+    setState(() {
+      saveStatus();
+      checkStatus = 1;
+      loadHistoriAbsensi();
+    });
+
+    print("Check in berhasil");
   }
 
-  // ✅ Kirim data kalau semua valid
-  var stream = http.ByteStream(DelegatingStream.typed(selfie.openRead()));
-  var length = await selfie.length();
-  var multipartFile = http.MultipartFile(
-    "image_checkin",
-    stream,
-    length,
-    filename: path.basename(selfie.path),
-  );
+  Future createCheckOut() async {
+    // Validasi awal
+    if (selfie == null ||
+        !(await selfie.exists()) ||
+        alamat.trim().isEmpty ||
+        id.trim().isEmpty ||
+        longlat.trim().isEmpty) {
+      //"Data tidak lengkap untuk Check Out.");
+      // Bisa tampilkan dialog error ke user juga
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text("Gagal Check Out"),
+          content: Text("Data belum lengkap. Pastikan foto dan lokasi terisi."),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("OK"),
+            )
+          ],
+        ),
+      );
+      return;
+    }
 
-  var req = http.MultipartRequest('POST', Uri.parse(util.Api.urlCheckIn))
-    ..headers['Content-Type'] = 'multipart/form-data'
-    ..fields['id_user'] = '$id'
-    ..fields['alamat_checkin'] = '$alamat'
-    ..fields['longlat_checkin'] = '$longlat'
-    ..files.add(multipartFile);
-
-  await req.send();
-
-  // ✅ Reset variabel
-  _image = null;
-  alamat = "";
-  id = "";
-  longlat = "";
-
-  setState(() {
-    saveStatus();
-    checkStatus = 1;
-    loadHistoriAbsensi();
-  });
-
-  print("Check in berhasil");
-}
-
-Future createCheckOut() async {
-  // Validasi awal
-  if (selfie == null ||
-      !(await selfie.exists()) ||
-      alamat.trim().isEmpty ||
-      id.trim().isEmpty ||
-      longlat.trim().isEmpty) {
-    //"Data tidak lengkap untuk Check Out.");
-    // Bisa tampilkan dialog error ke user juga
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: Text("Gagal Check Out"),
-        content: Text("Data belum lengkap. Pastikan foto dan lokasi terisi."),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text("OK"),
-          )
-        ],
-      ),
+    // Kirim data jika valid
+    var stream = http.ByteStream(DelegatingStream.typed(selfie.openRead()));
+    var length = await selfie.length();
+    var multipartFile = http.MultipartFile(
+      "image_checkout",
+      stream,
+      length,
+      filename: path.basename(selfie.path),
     );
-    return;
+
+    var req = http.MultipartRequest('POST', Uri.parse(util.Api.urlCheckIn))
+      ..headers['Content-Type'] = 'multipart/form-data'
+      ..fields['id_user'] = '$id'
+      ..fields['alamat_checkout'] = '$alamat'
+      ..fields['longlat_checkout'] = '$longlat'
+      ..files.add(multipartFile);
+
+    await req.send();
+
+    // Clear variabel setelah berhasil
+    _image = null;
+    alamat = "";
+    id = "";
+    longlat = "";
+
+    setState(() {
+      removeStatus();
+      checkStatus = 0;
+      loadHistoriAbsensi();
+    });
+
+    print("Check out berhasil");
   }
-
-  // Kirim data jika valid
-  var stream = http.ByteStream(DelegatingStream.typed(selfie.openRead()));
-  var length = await selfie.length();
-  var multipartFile = http.MultipartFile(
-    "image_checkout",
-    stream,
-    length,
-    filename: path.basename(selfie.path),
-  );
-
-  var req = http.MultipartRequest('POST', Uri.parse(util.Api.urlCheckIn))
-    ..headers['Content-Type'] = 'multipart/form-data'
-    ..fields['id_user'] = '$id'
-    ..fields['alamat_checkout'] = '$alamat'
-    ..fields['longlat_checkout'] = '$longlat'
-    ..files.add(multipartFile);
-
-  await req.send();
-
-  // Clear variabel setelah berhasil
-  _image = null;
-  alamat = "";
-  id = "";
-  longlat = "";
-
-  setState(() {
-    removeStatus();
-    checkStatus = 0;
-    loadHistoriAbsensi();
-  });
-
-  print("Check out berhasil");
-}
 
   // Future createCheckOut() async {
   //   // ignore: deprecated_member_use

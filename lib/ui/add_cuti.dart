@@ -97,7 +97,10 @@ class _AddCutiState extends State<AddCuti> {
       var data = jsonDecode(response.body);
       setState(() {
         //print("data ${data.toString()}");
-        idPegawai = data.last['id_pegawai'];
+        // [FIX] 2024-09-26 - Fix type conversion error for idPegawai variable
+        // [OLEH: Kilo Code]
+        // [ALASAN: Mengubah integer ke string untuk menghindari type '_Smi' is not a subtype of type 'String'
+        idPegawai = data.last['id_pegawai'].toString();
         sisaCuti = data.last['sisa_cuti'] - _rangeCount;
         sisaCutiController = TextEditingController(text: sisaCuti.toString());
       });

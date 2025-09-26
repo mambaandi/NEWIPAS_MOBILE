@@ -7,7 +7,7 @@ import 'package:ipas_mobile/model/util.dart' as util;
 import 'inventaris.dart';
 
 class Api {
-  static String baseURL = 'https://ipas.ptmds.co.id/api';
+  static String baseURL = 'https://icoss.ifocharcom.com/api';
   static String urlLogin = '$baseURL/login_users.php';
   static String urlInventory = '$baseURL/list_inventaris.php';
   static String urlDelInventory = '$baseURL/delete_inventaris.php';
@@ -95,7 +95,12 @@ Future<List<AbsenModel>> fetchLastHistoriAbsensi(String userid) async {
   if (response.statusCode == 200) {
     var data = jsonDecode(response.body);
     if (data is List) {
-      return data.map((e) => AbsenModel.fromJson(e)).toList();
+      try {
+        return data.map((e) => AbsenModel.fromJson(e)).toList();
+      } catch (e) {
+        print('Error parsing AbsenModel: $e');
+        return [];
+      }
     }
   }
   return Future.value([]);
